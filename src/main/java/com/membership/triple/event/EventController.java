@@ -1,23 +1,36 @@
 package com.membership.triple.event;
 
-import com.membership.triple.review.Review;
+import com.membership.triple.Point.PointService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.net.http.HttpResponse;
-import java.util.UUID;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 public class EventController {
 
-    @PostMapping("/events")
-    public ResponseEntity<ReviewEvent> event(@RequestBody ReviewEvent event) {
-        event.setType(EventType.REVIEW);
+    private final ReviewEventService reviewEventService;
+    private final PointService pointService;
 
-        return new ResponseEntity<>(event, HttpStatus.OK);
+    @PostMapping("/events")
+    public ResponseEntity event(@RequestBody Event event) {
+        HttpStatus status = HttpStatus.OK;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        switch (event.getType()) {
+            case REVIEW:
+                return reviewEventService.splitEvent(event.toReview());
+        }
+        return new ResponseEntity(null, headers, status);
     }
+
+    @GetMapping("/point")
+    public ResponseEntity point(@RequestParam String userId) {
+        return pointService.userPoint(userId);
+    }
+
 
 }
