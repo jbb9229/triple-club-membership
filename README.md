@@ -18,7 +18,7 @@ brew install git
 ```
 
 ## How To Run?
-Git Clone Project : https://github.com/jbb9229/ShareYourTrip.git
+Git Clone Project : https://github.com/jbb9229/triple-club-membership
 
 ```
 {project path}/gradle build
